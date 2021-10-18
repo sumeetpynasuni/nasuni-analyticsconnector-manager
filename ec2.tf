@@ -27,7 +27,7 @@ resource "null_resource" "NACManager_IP" {
   }
   provisioner "local-exec" {
     when    = destroy
-    command = "NACManager_IP.txt"
+    command = "rm -rf NACManager_IP.txt"
   }
   depends_on = [aws_instance.NACManager]
 }
