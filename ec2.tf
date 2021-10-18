@@ -14,8 +14,20 @@ resource "aws_instance" "NACManager" {
   tags = {
     Name = "NACManager"
   }
+
 }
 
 output "NACManager_ip" {
   value = "${aws_instance.NACManager.public_ip}"
+}
+
+resource "null_resource" "NACManager_IP" {
+  provisioner "local-exec" {
+    command = "echo ${aws_instance.NACManager.public_ip} > NACManager_IP.txt"
+  }
+  provisioner "local-exec" {
+    when    = destroy
+    command = "NACManager_IP.txt"
+  }
+  depends_on = [aws_instance.NACManager]
 }
