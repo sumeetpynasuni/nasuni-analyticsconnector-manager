@@ -10,19 +10,30 @@ variable "availability_zone" {
 # this is a keyName for key pairs
 variable "aws_key_name" {
   description = "Key Pair Name used to provision to the box"
+  type = map
+  default = {
+    us-east-1 = "nac-manager-nv"
+    us-west-2 = "nac-manager"
+  }
 }
-
 variable "instance_ami" {
   description = "Amazon Machine Image for the Instance"
+  type = map
+  default = {
+    "us-east-1" = "ami-09e67e426f25ce0d7"
+    "us-west-2" = "ami-00399ec92321828f5"
+  }
 }
+
 
 variable "instance_type" {
   description = "type of instances to provision"
+  default="m4.large"
 }
 
-variable "vpc_public_sg_id" {
-  description = "VPC public security group"
-}
+# variable "vpc_public_sg_id" {
+#   description = "VPC public security group"
+# }
 
 variable "aws_profile" {
   description = "aws profile : defaults to nasuni"
@@ -30,8 +41,12 @@ variable "aws_profile" {
 }
 variable "region" {
   description = "VPC region: defaults to us-east-1 (N.Virginia)"
+  default = "us-east-1"
 }
-
+variable "volume_size" {
+  description = "volume_size default is set as 32GiB"
+  default=500
+}
 /* variable "public_ssh_key" {
   description = "Public SSH key value"
 } */

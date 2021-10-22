@@ -1,4 +1,4 @@
-# *.tfvars
+*.tfvars
 cmd
 .aws
 # .gitignore
@@ -6,4 +6,5 @@ cmd
 .terraform
 *.txt
 *.lock.*
+*.sh
 
