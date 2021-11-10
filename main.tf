@@ -23,6 +23,7 @@ resource "aws_instance" "NACManager" {
       "sudo apt update",
       "sudo apt install jq -y",
       "sudo apt install unzip",
+      "sudo apt install dos2unix",
       "sudo apt install curl bash ca-certificates git openssl wget vim -y",
       "curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -",
       "sudo apt-add-repository \"deb [arch=$(dpkg --print-architecture)] https://apt.releases.hashicorp.com $(lsb_release -cs) main\"",
