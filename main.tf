@@ -53,7 +53,7 @@ resource "aws_instance" "NACManager" {
   }
 
   tags = {
-    Name = "AAA-NACManager"
+    Name = "NACManager"
   }
 
 depends_on = [
