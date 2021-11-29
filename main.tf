@@ -1,7 +1,7 @@
 
 # instances
 data "aws_region" current {}
-resource "aws_instance" "NACManager" {
+resource "aws_instance" "NACScheduler" {
   ami = var.instance_ami[data.aws_region.current.name]
   availability_zone = "${lookup(var.availability_zone, data.aws_region.current.name)}"
   instance_type = "${var.instance_type}"
@@ -53,7 +53,7 @@ resource "aws_instance" "NACManager" {
   }
 
   tags = {
-    Name = "NACManager"
+    Name = "NACScheduler"
   }
 
 depends_on = [
@@ -62,15 +62,15 @@ depends_on = [
 ]
 }
 
-resource "null_resource" "NACManager_IP" {
+resource "null_resource" "NACScheduler_IP" {
   provisioner "local-exec" {
-    command = "echo ${aws_instance.NACManager.public_ip} > NACManager_IP.txt"
+    command = "echo ${aws_instance.NACScheduler.public_ip} > NACScheduler_IP.txt"
   }
   provisioner "local-exec" {
     when    = destroy
-    command = "rm -rf NACManager_IP.txt"
+    command = "rm -rf NACScheduler_IP.txt"
   }
-  depends_on = [aws_instance.NACManager]
+  depends_on = [aws_instance.NACScheduler]
 }
 
 resource "null_resource" "aws_conf" {
@@ -94,8 +94,8 @@ data "local_file" "aws_conf_secret_key" {
   depends_on = [null_resource.aws_conf]
 }
 
-output "NACManager_ip" {
-  value = "${aws_instance.NACManager.public_ip}"
+output "NACScheduler_ip" {
+  value = "${aws_instance.NACScheduler.public_ip}"
 }
 
 
