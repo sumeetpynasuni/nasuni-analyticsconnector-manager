@@ -13,7 +13,7 @@ variable "aws_key_name" {
   type = map
   default = {
     us-east-1 = "nac-manager-nv"
-    us-west-2 = "nac-manager"
+    us-east-2 = "nac-manager"
   }
 }
 variable "instance_ami" {
@@ -21,7 +21,7 @@ variable "instance_ami" {
   type = map
   default = {
     "us-east-1" = "ami-09e67e426f25ce0d7"
-    "us-west-2" = "ami-00399ec92321828f5"
+    "us-east-2" = "ami-00399ec92321828f5"
   }
 }
 
@@ -40,8 +40,8 @@ variable "aws_profile" {
   default = "nasuni"
 }
 variable "region" {
-  description = "VPC region: defaults to us-east-1 (N.Virginia)"
-  default = "us-east-1"
+  description = "VPC region: defaults to us-east-2 (Ohio)"
+  default = "us-east-2"
 }
 variable "volume_size" {
   description = "volume_size default is set as 32GiB"
