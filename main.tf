@@ -56,7 +56,7 @@ resource "aws_instance" "NACScheduler" {
   }
 
   tags = {
-    Name = "NACScheduler"
+    Name = var.nac_scheduler_name
   }
 
 depends_on = [

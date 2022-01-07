@@ -47,6 +47,8 @@ variable "volume_size" {
   description = "volume_size default is set as 32GiB"
   default=500
 }
-/* variable "public_ssh_key" {
-  description = "Public SSH key value"
-} */
+
+variable "nac_scheduler_name" {
+  description = "nac_scheduler_name by default is NACScheduler"
+  default="NACScheduler"
+}

@@ -7,4 +7,5 @@ cmd
 *.txt
 *.lock.*
 *.sh
+dev.tfvars
 
