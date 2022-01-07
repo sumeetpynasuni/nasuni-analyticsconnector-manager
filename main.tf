@@ -41,10 +41,10 @@ resource "aws_instance" "NACScheduler" {
       "which aws",
       "aws configure --profile ${var.aws_profile} set aws_access_key_id ${data.local_file.aws_conf_access_key.content}",
       "aws configure --profile ${var.aws_profile} set aws_secret_access_key ${data.local_file.aws_conf_secret_key.content}",
-      "aws configure set region ${data.aws_region.current.name} --profile ${var.aws_profile}",
-      "sudo apt install apache2",
+      "aws configure set region ${data.aws_region.current.name} --profile ${var.aws_profile}"
+      /* "sudo apt install apache2",
       "sudo service apache2 restart",
-      "sudo service apache2 staus"
+      "sudo service apache2 staus" */
       ]
   }
 
