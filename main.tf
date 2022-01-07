@@ -41,10 +41,9 @@ resource "aws_instance" "NACScheduler" {
       "which aws",
       "aws configure --profile ${var.aws_profile} set aws_access_key_id ${data.local_file.aws_conf_access_key.content}",
       "aws configure --profile ${var.aws_profile} set aws_secret_access_key ${data.local_file.aws_conf_secret_key.content}",
-      "aws configure set region ${data.aws_region.current.name} --profile ${var.aws_profile}"
-      /* "sudo apt install apache2",
-      "sudo service apache2 restart",
-      "sudo service apache2 staus" */
+      "aws configure set region ${data.aws_region.current.name} --profile ${var.aws_profile}",
+      "sudo apt update",
+      "echo '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ FINISH @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'"
       ]
   }
 
@@ -96,6 +95,29 @@ data "local_file" "aws_conf_secret_key" {
   filename   = "${path.cwd}/Xaws_secret_key.txt"
   depends_on = [null_resource.aws_conf]
 }
+
+
+/* resource "null_resource" "Inatall_APACHE" {
+ provisioner "remote-exec" {
+    inline = [
+      "sudo apt update",
+      "echo '@@@@@@--------------------------- START ----------------------------------@@@@@@@@'",
+      "sudo apt install apache2",
+      "sudo ufw app list",
+      "sudo ufw allow 'Apache'",
+      "sudo service apache2 restart",
+      "sudo service apache2 staus",
+      "echo '@@@@@@--------------------------- FINISH ----------------------------------@@@@@@@@'"
+      ]
+  }
+  connection {
+    type        = "ssh"
+    host        = aws_instance.NACScheduler.public_ip
+    user        = "ubuntu"
+    private_key = file("./${var.aws_key_name[data.aws_region.current.name]}.pem")
+  }
+  depends_on = [aws_instance.NACScheduler]
+} */
 
 output "NACScheduler_ip" {
   value = "${aws_instance.NACScheduler.public_ip}"
