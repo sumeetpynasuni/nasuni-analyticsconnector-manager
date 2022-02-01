@@ -8,14 +8,14 @@ variable "availability_zone" {
 }
 
 # this is a keyName for key pairs
-variable "aws_key_name" {
-  description = "Key Pair Name used to provision to the box"
-  type = map
-  default = {
-    us-east-1 = "nac-manager-nv"
-    us-east-2 = "nac-manager"
-  }
-}
+# variable "aws_key_name" {
+#   description = "Key Pair Name used to provision to the box"
+#   type = map
+#   default = {
+#     us-east-1 = "nac-manager-nv"
+#     us-east-2 = "nac-manager"
+#   }
+# }
 variable "instance_ami" {
   description = "Amazon Machine Image for the Instance"
   type = map
@@ -51,4 +51,13 @@ variable "volume_size" {
 variable "nac_scheduler_name" {
   description = "nac_scheduler_name by default is NACScheduler"
   default="NACScheduler"
+}
+
+variable "pem_key_file" {
+  description = "Pem Key file path to be used to SSH the NACScheduler instance"
+  default = ""
+}
+variable "aws_key" {
+  description = "Key Pair Name used to provision the NAC Scheduler instance"
+  default = ""
 }

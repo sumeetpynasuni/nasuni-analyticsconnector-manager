@@ -1,11 +1,27 @@
 
 # instances
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64-server-*"]
+  }
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+  owners = ["099720109477"]
+}
+
 data "aws_region" current {}
+
 resource "aws_instance" "NACScheduler" {
-  ami = var.instance_ami[data.aws_region.current.name]
+  ami = data.aws_ami.ubuntu.id
+  # ami = var.instance_ami[data.aws_region.current.name]
   availability_zone = "${lookup(var.availability_zone, data.aws_region.current.name)}"
   instance_type = "${var.instance_type}"
-  key_name = "${var.aws_key_name[data.aws_region.current.name]}"
+  # key_name = "${var.aws_key_name[data.aws_region.current.name]}"
+  key_name = "${var.aws_key}"
   associate_public_ip_address = true
   source_dest_check = false
 
@@ -43,6 +59,7 @@ resource "aws_instance" "NACScheduler" {
       "aws configure --profile ${var.aws_profile} set aws_secret_access_key ${data.local_file.aws_conf_secret_key.content}",
       "aws configure set region ${data.aws_region.current.name} --profile ${var.aws_profile}",
       "sudo apt update",
+      "ls",
       "echo '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ FINISH @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'"
       ]
   }
@@ -51,7 +68,7 @@ resource "aws_instance" "NACScheduler" {
     type        = "ssh"
     host        = self.public_ip
     user        = "ubuntu"
-    private_key = file("./${var.aws_key_name[data.aws_region.current.name]}.pem")
+    private_key = file("./${var.pem_key_file}")
   }
 
   tags = {
@@ -97,27 +114,30 @@ data "local_file" "aws_conf_secret_key" {
 }
 
 
-/* resource "null_resource" "Inatall_APACHE" {
- provisioner "remote-exec" {
-    inline = [
-      "sudo apt update",
-      "echo '@@@@@@--------------------------- START ----------------------------------@@@@@@@@'",
-      "sudo apt install apache2",
-      "sudo ufw app list",
-      "sudo ufw allow 'Apache'",
-      "sudo service apache2 restart",
-      "sudo service apache2 staus",
-      "echo '@@@@@@--------------------------- FINISH ----------------------------------@@@@@@@@'"
-      ]
-  }
-  connection {
-    type        = "ssh"
-    host        = aws_instance.NACScheduler.public_ip
-    user        = "ubuntu"
-    private_key = file("./${var.aws_key_name[data.aws_region.current.name]}.pem")
-  }
-  depends_on = [aws_instance.NACScheduler]
-} */
+# resource "null_resource" "Inatall_APACHE" {
+#  provisioner "remote-exec" {
+#     inline = [
+#       "sudo apt update",
+#       "echo '@@@@@@--------------------------- START ----------------------------------@@@@@@@@'",
+#       "sudo apt install apache2 -y",
+#       "sudo ufw app list",
+#       "sudo ufw allow 'Apache'",
+#       "sudo service apache2 restart",
+#       "sudo service apache2 staus",
+
+#       "echo '@@@@@@--------------------------- FINISH ----------------------------------@@@@@@@@'"
+#       ]
+#   }
+#   connection {
+#     type        = "ssh"
+#     host        = aws_instance.NACScheduler.public_ip
+#     user        = "ubuntu"
+#     private_key = file("./${var.pem_key_file}")
+#     # private_key = file("./${var.aws_key_name[data.aws_region.current.name]}.pem")
+#   }
+#   depends_on = [aws_instance.NACScheduler]
+# }
+
 
 output "NACScheduler_ip" {
   value = "${aws_instance.NACScheduler.public_ip}"
