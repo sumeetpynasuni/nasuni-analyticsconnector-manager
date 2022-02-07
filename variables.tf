@@ -7,25 +7,6 @@ variable "availability_zone" {
   }
 }
 
-# this is a keyName for key pairs
-# variable "aws_key_name" {
-#   description = "Key Pair Name used to provision to the box"
-#   type = map
-#   default = {
-#     us-east-1 = "nac-manager-nv"
-#     us-east-2 = "nac-manager"
-#   }
-# }
-variable "instance_ami" {
-  description = "Amazon Machine Image for the Instance"
-  type = map
-  default = {
-    "us-east-1" = "ami-09e67e426f25ce0d7"
-    "us-east-2" = "ami-00399ec92321828f5"
-  }
-}
-
-
 variable "instance_type" {
   description = "type of instances to provision"
   default="m4.large"

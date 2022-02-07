@@ -17,10 +17,8 @@ data "aws_region" current {}
 
 resource "aws_instance" "NACScheduler" {
   ami = data.aws_ami.ubuntu.id
-  # ami = var.instance_ami[data.aws_region.current.name]
   availability_zone = "${lookup(var.availability_zone, data.aws_region.current.name)}"
   instance_type = "${var.instance_type}"
-  # key_name = "${var.aws_key_name[data.aws_region.current.name]}"
   key_name = "${var.aws_key}"
   associate_public_ip_address = true
   source_dest_check = false
