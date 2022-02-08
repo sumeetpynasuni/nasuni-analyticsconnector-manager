@@ -36,8 +36,6 @@ resource "aws_instance" "NACScheduler" {
     inline = [
       "sudo apt update",
       "sudo apt upgrade -y",
-      "sudo apt install jq -y",
-      "sudo apt install unzip",
       "sudo apt install dos2unix",
       "sudo apt install curl bash ca-certificates git openssl wget vim -y",
       "curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -",
@@ -46,6 +44,8 @@ resource "aws_instance" "NACScheduler" {
       "sudo apt install terraform",
       "terraform -v",
       "which terraform",
+      "sudo apt install jq -y",
+      "sudo apt install unzip",
       "sudo apt install python3 -y",
       "sudo apt install python3-pip -y",
       "sudo pip3 install boto3",
