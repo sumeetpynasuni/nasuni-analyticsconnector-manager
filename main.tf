@@ -35,7 +35,7 @@ resource "aws_instance" "NACScheduler" {
  provisioner "remote-exec" {
     inline = [
       "sudo apt update",
-      "sudo apt upgrade",
+      "sudo apt upgrade -y",
       "sudo apt install jq -y",
       "sudo apt install unzip",
       "sudo apt install dos2unix",
