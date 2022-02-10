@@ -154,8 +154,8 @@ resource "null_resource" "Inatall_APACHE" {
       # "cp index.html search.js style.css /var/www/html/",
       # "sudo service apache2 restart",
 
-output "NACScheduler_ip" {
-  value = "${aws_instance.NACScheduler.public_ip}"
+output "Nasuni-SearchUI-URL" {
+  value = "Nasuni ElasticSearch Web portal: http://${aws_instance.NACScheduler.public_ip}/index.html"
 }
 
 
