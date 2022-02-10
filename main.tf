@@ -143,7 +143,7 @@ resource "null_resource" "Inatall_APACHE" {
       ]
   }
   connection {
-    gittype        = "ssh"
+    type        = "ssh"
     host        = aws_instance.NACScheduler.public_ip
     user        = "ubuntu"
     private_key = file("./${var.pem_key_file}")
