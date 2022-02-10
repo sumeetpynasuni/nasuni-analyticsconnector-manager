@@ -136,6 +136,8 @@ resource "null_resource" "Inatall_APACHE" {
       "git clone https://github.com/psahuNasuni/SearchUI.git",
       "cd SearchUI/SearchUI_Web",
       "sudo chmod 755 /var/www/html/*",
+      "sudo cp index.html search.js style.css /var/www/html/",
+      "sudo service apache2 restart",
       "echo '@@@@@@--------------------------- FINISH ----------------------------------@@@@@@@@'"
       ]
   }
