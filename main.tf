@@ -138,7 +138,7 @@ resource "null_resource" "Inatall_APACHE" {
       "sudo chmod 755 /var/www/html/*",
       "sudo cp index.html search.js style.css /var/www/html/",
       "sudo service apache2 restart",
-      "echo 'Nasuni ElasticSearch Web portal: http://$(curl checkip.amazonaws.com)/index.html"',
+      "echo Nasuni ElasticSearch Web portal: http://$(curl checkip.amazonaws.com)/index.html",
       "echo '@@@@@@--------------------------- FINISH ----------------------------------@@@@@@@@'"
       ]
   }
