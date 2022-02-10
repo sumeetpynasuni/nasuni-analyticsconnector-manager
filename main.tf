@@ -85,6 +85,7 @@ data "local_file" "aws_conf_secret_key" {
  resource "null_resource" "Inatall_Packages" {
  provisioner "remote-exec" {
     inline = [
+      "echo '@@@@@@@@@@@@@@@@@@@@@ STARTED - Inastall Packages @@@@@@@@@@@@@@@@@@@@@@@'",
       "sudo apt update",
       "sudo apt upgrade -y",
       "sudo apt install dos2unix",
@@ -110,7 +111,7 @@ data "local_file" "aws_conf_secret_key" {
       "aws configure set region ${data.aws_region.current.name} --profile ${var.aws_profile}",
       "sudo apt update",
       "ls",
-      "echo '@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ FINISH @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@'"
+      "echo '@@@@@@@@@@@@@@@@@@@@@ FINISHED - Inastall Packages @@@@@@@@@@@@@@@@@@@@@@@'"
       ]
   }
 
@@ -126,20 +127,22 @@ data "local_file" "aws_conf_secret_key" {
 resource "null_resource" "Inatall_APACHE" {
  provisioner "remote-exec" {
     inline = [
+      "echo '@@@@@@@@@@@@@@@@@@@@@ STARTED - Inastall WEB Server            @@@@@@@@@@@@@@@@@@@@@@@'",
       "sudo apt update",
-      "echo '@@@@@@--------------------------- START ----------------------------------@@@@@@@@'",
       "sudo apt install apache2 -y",
       "sudo ufw app list",
       "sudo ufw allow 'Apache'",
       "sudo service apache2 restart",
       "sudo systemctl apache2 staus",
+      "echo '@@@@@@@@@@@@@@@@@@@@@ FINISHED - Inastall WEB Server             @@@@@@@@@@@@@@@@@@@@@@@'",
+      "echo '@@@@@@@@@@@@@@@@@@@@@ STARTED  - Deployment of SearchUI Web Site @@@@@@@@@@@@@@@@@@@@@@@'",
       "git clone https://github.com/psahuNasuni/SearchUI.git",
       "cd SearchUI/SearchUI_Web",
       "sudo chmod 755 /var/www/html/*",
       "sudo cp index.html search.js style.css /var/www/html/",
       "sudo service apache2 restart",
       "echo Nasuni ElasticSearch Web portal: http://$(curl checkip.amazonaws.com)/index.html",
-      "echo '@@@@@@--------------------------- FINISH ----------------------------------@@@@@@@@'"
+      "echo '@@@@@@@@@@@@@@@@@@@@@ FINISHED - Deployment of SearchUI Web Site @@@@@@@@@@@@@@@@@@@@@@@'"
       ]
   }
   connection {
@@ -147,15 +150,12 @@ resource "null_resource" "Inatall_APACHE" {
     host        = aws_instance.NACScheduler.public_ip
     user        = "ubuntu"
     private_key = file("./${var.pem_key_file}")
-    # private_key = file("./${var.aws_key_name[data.aws_region.current.name]}.pem")
   }
   depends_on = [null_resource.Inatall_Packages]
 }
-      # "cp index.html search.js style.css /var/www/html/",
-      # "sudo service apache2 restart",
 
-output "Nasuni-SearchUI-URL" {
-  value = "Nasuni ElasticSearch Web portal: http://${aws_instance.NACScheduler.public_ip}/index.html"
+output "Nasuni-SearchUI-Web-URL" {
+  value = "http://${aws_instance.NACScheduler.public_ip}/index.html"
 }
 
 
