@@ -133,7 +133,7 @@ resource "null_resource" "Inatall_APACHE" {
       "sudo ufw app list",
       "sudo ufw allow 'Apache'",
       "sudo service apache2 restart",
-      "sudo systemctl status apache2",
+      "sudo systemctl reload apache2",
       "echo '@@@@@@@@@@@@@@@@@@@@@ FINISHED - Inastall WEB Server             @@@@@@@@@@@@@@@@@@@@@@@'",
       "echo '@@@@@@@@@@@@@@@@@@@@@ STARTED  - Deployment of SearchUI Web Site @@@@@@@@@@@@@@@@@@@@@@@'",
       "git clone https://github.com/psahuNasuni/SearchUI.git",
@@ -144,7 +144,7 @@ resource "null_resource" "Inatall_APACHE" {
       "cd SearchUI_Web",
       "sudo chmod 755 /var/www/html/*",
       "sudo cp index.html search.js style.css /var/www/html/",
-      "sudo service apache2 restart",
+      "sudo systemctl reload apache2",
       "echo Nasuni ElasticSearch Web portal: http://$(curl checkip.amazonaws.com)/index.html",
       "echo '@@@@@@@@@@@@@@@@@@@@@ FINISHED - Deployment of SearchUI Web Site @@@@@@@@@@@@@@@@@@@@@@@'"
       ]
