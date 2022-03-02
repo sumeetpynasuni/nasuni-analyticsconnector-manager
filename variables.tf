@@ -42,3 +42,22 @@ variable "aws_key" {
   description = "Key Pair Name used to provision the NAC Scheduler instance"
   default = ""
 }
+variable "github_organization" {
+  description = "github organization used by Users, default is nasuni-labs"
+  default = "nasuni-labs"
+}
+# variable "git_repo_ui" {
+#   description = "git repo for Web UI used by Users, default is nasuni-opensearch-userinterface"
+#   default = "nasuni-opensearch-userinterface"
+# }
+variable "git_repo_ui" {
+  type = map
+  description = "git_repo_ui specific to certain repos"
+  default = {
+    psahuNasuni = "SearchUI"
+    nasuni-labs = "nasuni-opensearch-userinterface"
+  }
+}
+variable "user_vpc_id" {
+  default=""
+}
