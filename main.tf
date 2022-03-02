@@ -18,6 +18,17 @@ data "aws_vpc" "default" {
   default = true
 }
 
+
+# data "aws_vpc" "selected" {
+#   id = var.vpc_id
+# }
+
+# resource "aws_subnet" "vpc_subnet" {
+#   vpc_id            = data.aws_vpc.selected.id
+#   availability_zone = "us-west-2a"
+#   cidr_block        = cidrsubnet(data.aws_vpc.selected.cidr_block, 4, 1)
+# }
+
 resource "random_id" "unique_sg_id" {
   byte_length = 3
 }
@@ -116,18 +127,22 @@ resource "null_resource" "NACScheduler_IP" {
 
 resource "null_resource" "aws_conf" {
   provisioner "local-exec" {
-     command = "aws configure get aws_access_key_id --profile ${var.aws_profile} | xargs > Xaws_access_key.txt && aws configure get aws_secret_access_key --profile ${var.aws_profile} | xargs > Xaws_secret_key.txt"
+     command = "aws configure get aws_access_key_id --profile ${var.aws_profile} | xargs > awacck.txt && aws configure get aws_secret_access_key --profile ${var.aws_profile} | xargs > awsecck.txt"
+  }
+  provisioner "local-exec" {
+    when    = destroy
+    command = "rm -rf *cck.txt"
   }
 }
 
 data "local_file" "aws_conf_access_key" {
-  filename   = "${path.cwd}/Xaws_access_key.txt"
+  filename   = "${path.cwd}/awacck.txt"
   depends_on = [null_resource.aws_conf]
 }
 
 
 data "local_file" "aws_conf_secret_key" {
-  filename   = "${path.cwd}/Xaws_secret_key.txt"
+  filename   = "${path.cwd}/awsecck.txt"
   depends_on = [null_resource.aws_conf]
 }
 
@@ -192,7 +207,6 @@ resource "null_resource" "Inatall_APACHE" {
       "sudo chmod 755 /var/www/html/*",
       "sudo cp -a * /var/www/html/",
       "sudo service apache2 restart",
-      "rm -rf *key.txt",
       "echo Nasuni ElasticSearch Web portal: http://$(curl checkip.amazonaws.com)/index.html",
       "echo '@@@@@@@@@@@@@@@@@@@@@ FINISHED - Deployment of SearchUI Web Site @@@@@@@@@@@@@@@@@@@@@@@'"
       ]
@@ -206,12 +220,14 @@ resource "null_resource" "Inatall_APACHE" {
   depends_on = [null_resource.Inatall_Packages]
 }
 
-# resource "null_resource" "cleanup_temp_files" {
-#    provisioner "local-exec" {
-#     command = "rm -rf *key.txt"
-#   }
-#   depends_on = [null_resource.Inatall_APACHE]
-# }
+resource "null_resource" "cleanup_temp_files" {
+   provisioner "local-exec" {
+    # command = "rm -rf *cck.txt"
+    command = "echo . > awacck.txt && echo . > awsecck.txt"
+  }
+   
+  depends_on = [null_resource.Inatall_APACHE]
+}
 output "Nasuni-SearchUI-Web-URL" {
   value = "http://${aws_instance.NACScheduler.public_ip}/index.html"
 }
