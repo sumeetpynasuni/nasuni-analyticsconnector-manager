@@ -18,21 +18,22 @@ data "aws_vpc" "default" {
   default = true
 }
 
-
-# data "aws_vpc" "selected" {
-#   id = var.vpc_id
-# }
-
-# resource "aws_subnet" "vpc_subnet" {
-#   vpc_id            = data.aws_vpc.selected.id
-#   availability_zone = "us-west-2a"
-#   cidr_block        = cidrsubnet(data.aws_vpc.selected.cidr_block, 4, 1)
-# }
-
 resource "random_id" "unique_sg_id" {
   byte_length = 3
 }
 
+
+data "aws_vpc" "VPCtoBeUsed" {
+  id = var.user_vpc_id != "" ? var.user_vpc_id : data.aws_vpc.default.id 
+}
+
+data "aws_subnet_ids" "FetchingSubnetIDs" {
+  vpc_id = data.aws_vpc.VPCtoBeUsed.id
+}
+data "aws_subnet" "example" {
+ for_each = data.aws_subnet_ids.FetchingSubnetIDs.ids
+ id  = each.value
+}
 
 resource "aws_instance" "NACScheduler" {
   ami = data.aws_ami.ubuntu.id
@@ -41,11 +42,11 @@ resource "aws_instance" "NACScheduler" {
   key_name = "${var.aws_key}"
   associate_public_ip_address = true
   source_dest_check = false
-  
+  subnet_id   = element(tolist(data.aws_subnet_ids.FetchingSubnetIDs.ids),0) 
   root_block_device {
     volume_size = var.volume_size
   }
-  #vpc_security_group_ids = [ aws_security_group.nasunilabsSecurityGroup.id ]
+  vpc_security_group_ids = [ aws_security_group.nasunilabsSecurityGroup.id ]
   tags = {
     Name            = var.nac_scheduler_name
     Application     = "Nasuni Analytics Connector with Elasticsearch"
@@ -62,36 +63,37 @@ depends_on = [
 }
 
 resource "aws_security_group" "nasunilabsSecurityGroup" {
-  name        = "ES_Strikers-SG-${random_id.unique_sg_id.dec}"
+  name        = "nasuni-labs-ES-Strikers-SG-${random_id.unique_sg_id.dec}"
   description = "Allow adinistrators to access HTTP and SSH service in instance"
-  vpc_id      = data.aws_vpc.default.id
+  vpc_id      = data.aws_vpc.VPCtoBeUsed.id
+
 
  # count = min(length(var.ingress_ports))
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [data.aws_vpc.default.cidr_block]
+    cidr_blocks = [data.aws_vpc.VPCtoBeUsed.cidr_block]
   }
 
     ingress {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
-    cidr_blocks = [data.aws_vpc.default.cidr_block]
+    cidr_blocks = [data.aws_vpc.VPCtoBeUsed.cidr_block]
   }
 
       ingress {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
-    cidr_blocks = [data.aws_vpc.default.cidr_block]
+    cidr_blocks = [data.aws_vpc.VPCtoBeUsed.cidr_block]
   }
   ingress {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
-    cidr_blocks = [data.aws_vpc.default.cidr_block]
+    cidr_blocks = [data.aws_vpc.VPCtoBeUsed.cidr_block]
   }
   egress {
     from_port       = 0
@@ -222,14 +224,20 @@ resource "null_resource" "Inatall_APACHE" {
 
 resource "null_resource" "cleanup_temp_files" {
    provisioner "local-exec" {
-    # command = "rm -rf *cck.txt"
     command = "echo . > awacck.txt && echo . > awsecck.txt"
   }
    
   depends_on = [null_resource.Inatall_APACHE]
 }
+
 output "Nasuni-SearchUI-Web-URL" {
   value = "http://${aws_instance.NACScheduler.public_ip}/index.html"
 }
 
 
+# output "SubnetUsed" {
+#   value = element(tolist(data.aws_subnet_ids.FetchingSubnetIDs.ids),0) 
+# }
+output "REgion"{
+  value=data.aws_region.current.name
+}

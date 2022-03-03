@@ -36,6 +36,7 @@ add_ip_to_sec_grp() {
 	status=$(aws ec2 authorize-security-group-ingress --group-id ${SECURITY_GROUP_ID} --profile "${AWS_PROFILE}" --protocol tcp --port 22 --cidr ${NEW_CIDR} 2>/dev/null)
 	status80=$(aws ec2 authorize-security-group-ingress --group-id ${SECURITY_GROUP_ID} --profile "${AWS_PROFILE}" --protocol tcp --port 80 --cidr ${NEW_CIDR} 2>/dev/null)
 	status443=$(aws ec2 authorize-security-group-ingress --group-id ${SECURITY_GROUP_ID} --profile "${AWS_PROFILE}" --protocol tcp --port 443 --cidr ${NEW_CIDR} 2>/dev/null)
+	status8080=$(aws ec2 authorize-security-group-ingress --group-id ${SECURITY_GROUP_ID} --profile "${AWS_PROFILE}" --protocol tcp --port 8080 --cidr ${NEW_CIDR} 2>/dev/null)
 	# aws ec2 authorize-security-group-ingress --group-name sg-a3204ac8 --protocol tcp --port 22 --cidr 103.168.202.24/24
 	if [ $? -eq 0 ]; then
 		echo "INFO ::: Local Computer IP $NEW_CIDR updated to inbound rule of Security Group $SECURITY_GROUP_ID"
