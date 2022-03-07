@@ -12,10 +12,6 @@ variable "instance_type" {
   default="m4.large"
 }
 
-# variable "vpc_public_sg_id" {
-#   description = "VPC public security group"
-# }
-
 variable "aws_profile" {
   description = "aws profile : defaults to nasuni"
   default = "nasuni"
@@ -46,10 +42,6 @@ variable "github_organization" {
   description = "github organization used by Users, default is nasuni-labs"
   default = "nasuni-labs"
 }
-# variable "git_repo_ui" {
-#   description = "git repo for Web UI used by Users, default is nasuni-opensearch-userinterface"
-#   default = "nasuni-opensearch-userinterface"
-# }
 variable "git_repo_ui" {
   type = map
   description = "git_repo_ui specific to certain repos"

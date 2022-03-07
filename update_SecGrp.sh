@@ -10,6 +10,7 @@
 ###				3rd Argument : AWS Region
 ###				4th Argument : AWS Profile
 ###########################################################################
+
 NAC_SCHEDULER_IP_ADDR=$1
 NAC_SCHEDULER_NAME=$2
 AWS_REGION=$3

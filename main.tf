@@ -233,11 +233,3 @@ resource "null_resource" "cleanup_temp_files" {
 output "Nasuni-SearchUI-Web-URL" {
   value = "http://${aws_instance.NACScheduler.public_ip}/index.html"
 }
-
-
-# output "SubnetUsed" {
-#   value = element(tolist(data.aws_subnet_ids.FetchingSubnetIDs.ids),0) 
-# }
-output "REgion"{
-  value=data.aws_region.current.name
-}
